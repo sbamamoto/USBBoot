@@ -87,7 +87,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="btStart">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Scan Drives"/>
+        <Property name="text" type="java.lang.String" value="Prepare"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btStartActionPerformed"/>
