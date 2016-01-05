@@ -10,4 +10,52 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>**/cocoasudo</exclude>                    
+                    <exclude>**/usbboot.icns</exclude>                    
+                </excludes>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/cocoasudo</include>
+                    <include>**/usbboot.icns</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>sh.tak.appbundler</groupId>
+                <artifactId>appbundle-maven-plugin</artifactId>
+                <version>1.0.5-SNAPSHOT</version>
+                <configuration>
+                    <iconFile>usbboot.icns</iconFile>
+                    <mainClass>de.bamamoto.mactools.usbboot.USBBoot</mainClass>
+                    <jrePath>/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/</jrePath>
+                    <generateDiskImageFile>true</generateDiskImageFile>
+                    <!--Workaround for Bug JDK-7173464-->
+                    <jvmOptions>
+                        <string>-Djava.util.Arrays.useLegacyMergeSort=true</string>
+                    </jvmOptions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
+
+
