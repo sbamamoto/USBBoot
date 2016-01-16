@@ -1,5 +1,6 @@
 ##WARNING:  
-###This tool writes direct to the selected disk. If you select the wrong disk all contents on the selected dips will be destroyed.  
+###This tool writes direct to the selected disk. If you select the wrong disk all contents on the selected dips will be destroyed. 
+###Use it at your own risk.
 
 # USBBoot  
 Simple bootable USB stick creation tool for Mac OS X in Java. It is very simple to create a bootable USBStick with Mac OS X. It is just a few commands on your command line and you have perfectly bootable USB Stick created from a .iso file.  
