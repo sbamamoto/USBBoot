@@ -19,6 +19,16 @@ a while and has no progressbar yet.
 
 After the image has been created the program will scan for drives to install 
 the image on. Be sure that your USB stick is inserted and the system has recognized it.
+UBBoot will show all drives found be crefull when selecting the drive.
+
+![alt tag](https://raw.github.com/sbamamoto/USBBoot/master/src/main/resources/docimages/step3.png)
+
+After selectign the drive press the Write To Stick button to write the .iso file to the selected drive.
+
+![alt tag](https://raw.github.com/sbamamoto/USBBoot/master/src/main/resources/docimages/step4.png)
+
+Thats it the drive will be written.
 
 ###3rd Party
-I used https://github.com/performantdesign/cocoasudo to get the neccessary previleges. The exceutable is embedded to amke it easier for you to build a working .dmg file.
+I used https://github.com/performantdesign/cocoasudo to get the neccessary privileges. The exceutable is embedded to make it easier for you to build a working .dmg file.
+To create a .dmg file the project:  is used.
