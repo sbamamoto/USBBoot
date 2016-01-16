@@ -30,5 +30,5 @@ Thats it the drive will be written.
  
 ###3rd Party 
 I used https://github.com/performantdesign/cocoasudo to get the necessary privileges. The executable is embedded to make it easier for you to build a working .dmg file. 
-To create a .dmg file the project:  is used. 
+To create a .dmg file the project: https://github.com/federkasten/appbundle-maven-plugin is used. 
  
