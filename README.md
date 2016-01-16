@@ -15,6 +15,8 @@ simple program.
 Just select a .iso file and press the Prepare button. Be patient it takes 
 a while and has no progressbar yet.
 
+![alt tag](https://raw.github.com/sbamamoto/USBBoot/master/src/main/resources/docimages/step2.png)
+
 After the image has been created the program will scan for drives to install 
 the image on. Be sure that your USB stick is inserted and the system has recognized it.
 
