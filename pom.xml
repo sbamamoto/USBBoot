@@ -26,7 +26,7 @@
                 <filtering>false</filtering>
                 <includes>
                     <include>**/cocoasudo</include>
-                    <include>**/usbboot.icns</include>
+                    <include>**/usbboot.png</include>
                 </includes>
             </resource>
         </resources>
@@ -39,6 +39,15 @@
                     <iconFile>usbboot.icns</iconFile>
                     <mainClass>de.bamamoto.mactools.usbboot.USBBoot</mainClass>
                     <jrePath>/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/</jrePath>
+                    <additionalResources>
+                        <fileSet>
+                            <directory>src/main/resources/</directory> 
+                            <executable>true</executable>                               
+                            <includes>
+                                <include>**/cocoasudo</include>
+                            </includes>
+                        </fileSet>
+                    </additionalResources>
                     <generateDiskImageFile>true</generateDiskImageFile>
                     <!--Workaround for Bug JDK-7173464-->
                     <jvmOptions>

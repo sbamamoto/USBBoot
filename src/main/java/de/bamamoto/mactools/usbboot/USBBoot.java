@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -37,6 +38,8 @@ public class USBBoot extends javax.swing.JFrame {
      */
     public USBBoot() {
         initComponents();
+        this.setIconImage(new ImageIcon(getClass().getResource("/icon/usbboot.png")).getImage());
+
     }
 
     protected String runProcess(List<String> commandLine) throws IOException {
@@ -47,14 +50,15 @@ public class USBBoot extends javax.swing.JFrame {
         }
         
         String result = "";
-        
+       
         ProcessBuilder builder = new ProcessBuilder(commandLine);
-        builder.redirectErrorStream(true);
-        Process process = builder.start();
-        String line;
-
         Map<String, String> env = builder.environment();
-        env.put("PATH", "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
+        env.put("PATH", "/usr/sbin:/usr/bin:/sbin:/bin");
+        builder.redirectErrorStream(true);
+
+        Process process = builder.start();
+
+        String line;
 
         InputStream stdout = process.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(stdout));
@@ -120,7 +124,7 @@ public class USBBoot extends javax.swing.JFrame {
             }
         });
 
-        btStart.setText("Scan Drives");
+        btStart.setText("Prepare");
         btStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btStartActionPerformed(evt);
@@ -143,7 +147,7 @@ public class USBBoot extends javax.swing.JFrame {
                 {null, null}
             },
             new String [] {
-                "Title 1", "Title 2"
+                "Volume Name", "Drive"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -216,6 +220,22 @@ public class USBBoot extends javax.swing.JFrame {
     private void btStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btStartActionPerformed
         if (new File(txIsoFile.getText()).exists()) {
             try {
+                
+                if (new File("/tmp/image.dmg").exists()) {
+                    int result = JOptionPane.showConfirmDialog(this, "Press Yes to overwrite old image file.","Old image file found ...",JOptionPane.YES_NO_OPTION); 
+                    if (result == JOptionPane.YES_OPTION) {
+                        if (!new File("/tmp/image.dmg").delete()) {
+                            JOptionPane.showMessageDialog(this, "Cannot delete [/tmp/image.dmg]. Preparing aborted.", "Removing old image failed", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this, "Preparing operation canceld.");
+                        return;
+                    
+                    }
+                }
+                
                 runProcess (new ArrayList<>(Arrays.asList(new String []{"hdiutil", "convert", "-format", "UDRW", "-o", "/tmp/image", txIsoFile.getText()})));
                 int result = JOptionPane.showConfirmDialog(this, "Be sure your USB Stick is inserted and available to the system.\nPress OK when ready.", 
                         "Scanning Drives", JOptionPane.OK_CANCEL_OPTION);
@@ -224,7 +244,8 @@ public class USBBoot extends javax.swing.JFrame {
                     return;
                 }
                 driveList.clear();
-                String list = runProcess (new ArrayList<>(Arrays.asList(new String []{"diskutil", "list"})));
+                String list = runProcess (new ArrayList<>(Arrays.asList(new String []{"/usr/sbin/diskutil", "list"})));
+//                String list = runProcess (new String []{"/usr/sbin/diskutil", "list"});
                 String drives[] = list.split("\n");
              
                 for (String line:drives) {
@@ -235,6 +256,7 @@ public class USBBoot extends javax.swing.JFrame {
                 }
                 
                 list = runProcess (new ArrayList<>(Arrays.asList(new String []{"mount"})));
+//                list = runProcess (new String []{"mount"});
                 String mounts[] = list.split("\n");
              
                 ArrayList<String> volumes = new ArrayList<>();
@@ -262,8 +284,6 @@ public class USBBoot extends javax.swing.JFrame {
                 titles.add("Device");
                 tbVolumes.setModel(new DefaultTableModel(rowData, titles));
                 
-            } catch (IOException ex) {
-                Logger.getLogger(USBBoot.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, ex.toString(), "Unexpected Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
@@ -287,16 +307,24 @@ public class USBBoot extends javax.swing.JFrame {
                 return;
             }
             String list = runProcess (new ArrayList<>(Arrays.asList(new String []{"diskutil", "umountDisk", device})));
+//            String list = runProcess (new String []{"diskutil", "umountDisk", device});
+            String ddDevice = device.replace("disk", "rdisk");
             result = JOptionPane.showConfirmDialog(this,
                     "Running command:\n sudo dd if=/tmp/image.dmg of="
-                            +device.replace("disk", "rdisk")+" bs=1m\n\nAll data on the selected drive will be destroyed. Still sure ?",
+                            +ddDevice+" bs=1m\n\nAll data on the selected drive will be destroyed. Still sure ?",
                     "Warning", JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE);
-            
+
             if (result == JOptionPane.YES_OPTION) { 
-                System.out.println("sudo dd if=/tmp/image.dmg of="
-                            +device.replace("disk", "rdisk")+" bs=1m");
-                list = runProcess (new ArrayList<>(Arrays.asList(new String []{"sudo", "dd", "if=/tmp/image.dmg", "of="+device.replace("disk", "rdisk"), "bs=1m"})));  
+                System.out.println("cocoasudo dd if=/tmp/image.dmg of="
+                            +ddDevice+" bs=1m");
+                list = runProcess (new ArrayList<>(Arrays.asList(
+                        new String []{
+                            "Contents/Resources/cocoasudo",
+                            "--prompt=Need root permissions to access USB stick.",                            
+                            "dd", "if=/tmp/image.dmg", 
+                            "of="+ddDevice, "bs=1m"})));  
+                JOptionPane.showMessageDialog(this, "Your bootable USB Stick is now ready for use.");
             }
         } catch (Exception ex) {
             Logger.getLogger(USBBoot.class.getName()).log(Level.SEVERE, null, ex);
