@@ -8,7 +8,9 @@ It is just a few commands on your command line and you have
 perfectly bootable USB Stick created from a .iso file. 
 To make the functionality available for GUI users I developed this 
 simple program.
+
 ![alt tag](https://raw.github.com/sbamamoto/USBBoot/master/src/main/resources/docimages/step1.png)
+
 Just select a .iso file and press the Prepare button. Be patient it takes 
 a while and has no progressbar yet.
 ![alt tag](https://raw.github.com/sbamamoto/USBBoot/master/src/main/resources/docimages/step2.png)
