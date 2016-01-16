@@ -1,5 +1,5 @@
 ##WARNING:  
-###This tool writes direct to the selected disk. If you select the wrong disk all contents on the selected dips will be destroyed. 
+###This tool writes direct to the selected disk. If you select the wrong disk all contents on the disk will be destroyed. 
 ###Use it at your own risk.
 
 # USBBoot  
